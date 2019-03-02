@@ -102,7 +102,7 @@ entropyResults = zeros(1,maxt);
 
 % Improve speed by making it so you don't have to re-calculate these
 % persistent variables each time you call the function.
-persistent P_E P_iEH P_inotEH updateValues 
+persistent P_E P_iEH P_inotEH updateValues
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -120,7 +120,7 @@ for i=1:dim^2
 end
 
 % Calculate the initial probabilities for each possible evidence value E.
-if isempty(P_E)
+if isnan(P_E)
     P_E = arrayfun(@(E) P_Efun(E,n), 0:n);
     P_iEH = arrayfun(@(E) P_EGivenH(E,n,true), 0:n);
     P_inotEH = arrayfun(@(E) P_EGivenH(E,n,false), 0:n);
@@ -128,7 +128,7 @@ end
 
 % Calculate how much a given scientist will update their beliefs given 
 % a neighbor's evidence. Store results in the matrix updateValues.
-if isempty(updateValues)
+if isnan(updateValues)
     updateValues = zeros(1+mapGranularity,1+mapGranularity,1+n);
     for myCredence=0:mapGranularity
         for neighborCredence=0:mapGranularity
@@ -173,12 +173,13 @@ for t=1:maxt
     % UPDATE PLOT WITH NEW MAP DATA
     if display
         set(plothandle,'cdata',map); 
-%         set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);  
-        figure(gcf),drawnow; % Force matlab to show the figure
+%         set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1],'FontSize',18);  
+        set(gcf,'FontSize',18)
+        figure(gcf),drawnow; % force matlab to show the figure
 
-       % Bail out if the user closed the figure
+       % Bail out if the user closed the figure 
         if ~ishandle(fighandle)
-            plotMapInNewFigure(map); % Plot final map and exit
+            plotMapInNewFigure(map); %plot final map and exit
             title('Final configuration')
             break
         end
